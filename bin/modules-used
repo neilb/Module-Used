@@ -1,0 +1,173 @@
+#!/usr/bin/env perl
+
+use utf8;
+use 5.008001;
+
+use strict;
+use warnings;
+
+use version; our $VERSION = qv('v1.0.0');
+
+use Module::Used qw< modules_used_in_files >;
+
+return 1 if caller;
+exit run(@ARGV);
+
+sub run {
+    my (@argv) = @_;
+
+    my @modules = modules_used_in_files( @argv );
+    foreach my $module ( sort @modules ) {
+        print "$module\n";
+    } # end foreach
+
+    return 0;
+} # end run()
+
+__END__
+
+=encoding utf8
+
+=for stopwords
+
+=head1 NAME
+
+modules-used - List modules used by a set of Perl source files without running them.
+
+
+=head1 VERSION
+
+This document describes modules-used version 1.0.0.
+
+
+=head1 USAGE
+
+    modules-used source-file [...]
+
+
+=head1 DESCRIPTION
+
+Dumps a list of modules used by some Perl code.  Modules are found statically
+based upon C<use> and C<require> statements.  If use of the L<base> or
+L<parent> is found, both that module and the referenced ones will be emitted.
+
+Dynamically loaded modules will not be found.
+
+
+=head1 REQUIRED ARGUMENTS
+
+=over
+
+=item · source-file [...]
+
+A list of files to search.
+
+
+=back
+
+
+=head1 OPTIONS
+
+None.
+
+
+=head1 DIAGNOSTICS
+
+=over
+
+=item "%s" does not exist.
+
+Cannot find the file.
+
+
+=item "%s" is not readable.
+
+Cannot read the file.
+
+
+=item "%s" is a directory.
+
+The "file" was actually a directory.
+
+
+=item Could not parse "%s".
+
+L<PPI> could not interpret the file as a Perl document.
+
+
+=back
+
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+None.
+
+
+=head1 DEPENDENCIES
+
+L<Module::Used>
+
+
+=head1 INCOMPATIBILITIES
+
+None known.
+
+
+=head1 BUGS AND LIMITATIONS
+
+None reported.
+
+Please report any bugs or feature requests to
+C<bug-module-used@rt.cpan.org>, or through the web
+interface at L<http://rt.cpan.org>.
+
+
+=head1 SEE ALSO
+
+L<Devel::Loaded>
+L<Module::Extract::Namespaces>
+L<Module::ScanDeps>
+
+
+=head1 AUTHOR
+
+Elliot Shank C<< <perl@galumph.com> >>
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright ©2008, Elliot Shank C<< <perl@galumph.com> >>. All
+rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. See L<perlartistic>.
+
+
+=head1 DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENSE, BE LIABLE
+TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES.
+
+=cut
+
+# setup vim: set filetype=perl tabstop=4 softtabstop=4 expandtab :
+# setup vim: set shiftwidth=4 shiftround textwidth=78 nowrap autoindent :
+# setup vim: set foldmethod=indent foldlevel=0 :
