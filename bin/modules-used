@@ -1,12 +1,12 @@
 #!/usr/bin/env perl
 
 use utf8;
-use 5.008001;
+use 5.008003;
 
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.0.0');
+use version; our $VERSION = qv('v1.0.1');
 
 use Module::Used qw< modules_used_in_files >;
 
@@ -37,7 +37,7 @@ modules-used - List modules used by a set of Perl source files without running t
 
 =head1 VERSION
 
-This document describes modules-used version 1.0.0.
+This document describes modules-used version 1.0.1.
 
 
 =head1 USAGE
@@ -127,6 +127,7 @@ interface at L<http://rt.cpan.org>.
 L<Devel::Loaded>
 L<Module::Extract::Namespaces>
 L<Module::ScanDeps>
+L<Module::PrintUsed>
 
 
 =head1 AUTHOR

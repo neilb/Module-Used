@@ -1,12 +1,12 @@
 package Module::Used;
 
-use 5.008001;
+use 5.008003;
 use utf8;
 
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.0.0');
+use version; our $VERSION = qv('v1.0.1');
 
 use English qw<-no_match_vars>;
 use Readonly;
@@ -151,7 +151,7 @@ Module::Used - Find modules loaded by Perl code without running it.
 
 =head1 VERSION
 
-This document describes Module::Used version 1.0.0.
+This document describes Module::Used version 1.0.1.
 
 
 =head1 SYNOPSIS
@@ -261,6 +261,7 @@ or through the web interface at L<http://rt.cpan.org>.
 L<Devel::Loaded>
 L<Module::Extract::Namespaces>
 L<Module::ScanDeps>
+L<Module::PrintUsed>
 
 
 =head1 AUTHOR

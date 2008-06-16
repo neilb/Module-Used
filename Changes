@@ -1,4 +1,8 @@
 Revision history for Module::Used.
 
+1.0.1  2008-06-16
+    Require perl 5.8.3.  Due to site/core @INC issues, requiring Exporter 5.57
+    isn't good enough.
+
 1.0.0  2008-06-15
     Initial release.
