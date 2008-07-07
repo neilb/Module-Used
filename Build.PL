@@ -61,6 +61,7 @@ my $builder = $class->new(
     requires            => {
         'English'           => 0,
         'Exporter'          => 5.57,
+        'File::Next'        => 1.02,
         'PPI::Document'     => 1.203,
         'Readonly'          => 1.03,
         'strict'            => 0,

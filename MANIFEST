@@ -1,9 +1,9 @@
 bin/modules-used
 Build.PL
 Changes
+Foo.pm
 lib/Module/Used.pm
 MANIFEST			This list of files
-META.yml
 README
 t/a_use_ok.t
 t/b_modules_used.t
@@ -19,3 +19,4 @@ xt/author/pod_coverage.t
 xt/author/pod_spelling.t
 xt/author/pod_syntax.t
 xt/author/README
+META.yml

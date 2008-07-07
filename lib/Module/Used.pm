@@ -6,7 +6,7 @@ use utf8;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.0.1');
+use version; our $VERSION = qv('v1.1.0');
 
 use English qw<-no_match_vars>;
 use Readonly;
@@ -151,7 +151,7 @@ Module::Used - Find modules loaded by Perl code without running it.
 
 =head1 VERSION
 
-This document describes Module::Used version 1.0.1.
+This document describes Module::Used version 1.1.0.
 
 
 =head1 SYNOPSIS

@@ -6,9 +6,38 @@ use 5.008003;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.0.1');
+use version; our $VERSION = qv('v1.1.0');
+
+use English qw< -no_match_vars >;
+use Readonly;
+
+use File::Next ();
 
 use Module::Used qw< modules_used_in_files >;
+
+Readonly my %ignored_directories =>
+    map { $_ => 1 }
+    qw<
+        .bzr
+        .cdv
+        ~.dep
+        ~.dot
+        ~.nib
+        ~.plst
+        .git
+        .hg
+        .pc
+        .svn
+        blib
+        CVS
+        RCS
+        SCCS
+        _darcs
+        _sgbak
+        autom4te.cache
+        cover_db
+        _build
+    >;
 
 return 1 if caller;
 exit run(@ARGV);
@@ -16,13 +45,76 @@ exit run(@ARGV);
 sub run {
     my (@argv) = @_;
 
-    my @modules = modules_used_in_files( @argv );
+    my @modules = modules_used_in_files( _get_files(@argv) );
     foreach my $module ( sort @modules ) {
         print "$module\n";
     } # end foreach
 
     return 0;
 } # end run()
+
+
+sub _get_files {
+    my @paths = @_;
+
+    my $iterator = File::Next::files(
+        {
+            file_filter => sub {
+                    not _is_ignored_file($_)
+                and _is_perl_file($File::Next::name)
+            },
+            descend_filter => sub { not _is_ignored_directory($_) },
+        },
+        @paths,
+    );
+
+    my @files;
+    while ( defined ( my $file = $iterator->() ) ) {
+        push @files, $file;
+    }
+
+    return @files;
+}
+
+sub _is_ignored_directory {
+    my ($directory) = @_;
+
+    return 1 if $ignored_directories{$directory};
+    return 0;
+}
+
+sub _is_ignored_file {
+    my ($file) = @_;
+
+    return 1 if $file =~ qr< (?: [.] bak | ~ ) \z >xms;
+    return 1 if $file =~ qr< [#] .+ [#] \z       >xms;
+    return 1 if $file =~ qr< [._] .* \.swp \z    >xms;
+    return $file =~ qr< core [.] \d+ \z      >xms;
+}
+
+sub _is_perl_file {
+    my ($file) = @_;
+
+    return 1 if $file =~ m/ [.] (?: p (?: l x? | m ) | t | PL ) \z /xms; ## no critic (ProhibitSingleCharAlternation)
+    return 0 if index($file, q<.>) >= 0;
+    return _is_perl_program($file);
+}
+
+sub _is_perl_program {
+    my ($file) = @_;
+
+    if (open my $handle, '<', $file) {
+        my $first_line = <$handle>;
+
+        if (not close $handle) {
+            die qq<Could not close "$file": $OS_ERROR\n>;
+        }
+
+        return $first_line =~ m< \A [#]! .* \bperl >xms;
+    }
+
+    die qq<Could not open "$file": $OS_ERROR\n>;
+}
 
 __END__
 
@@ -37,7 +129,7 @@ modules-used - List modules used by a set of Perl source files without running t
 
 =head1 VERSION
 
-This document describes modules-used version 1.0.1.
+This document describes modules-used version 1.1.0.
 
 
 =head1 USAGE

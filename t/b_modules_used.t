@@ -5,7 +5,7 @@ use utf8;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.0.1');
+use version; our $VERSION = qv('v1.1.0');
 
 use Module::Used qw< modules_used_in_string modules_used_in_files >;
 
