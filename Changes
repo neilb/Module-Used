@@ -1,5 +1,11 @@
 Revision history for Module::Used.
 
+1.2.0  2008-12-08
+
+    Case-insensitive sort.
+
+    Now looks for "extends" and "with" when Moose or Moose::Role are used.
+
 1.1.0  2008-07-06
 
     Now recursivly finds Perl code.

@@ -1,7 +1,6 @@
 bin/modules-used
 Build.PL
 Changes
-Foo.pm
 lib/Module/Used.pm
 MANIFEST			This list of files
 README
@@ -16,7 +15,6 @@ xt/author/perlcritic-tests.t
 xt/author/perlcriticrc-code
 xt/author/perlcriticrc-tests
 xt/author/pod_coverage.t
-xt/author/pod_spelling.t
 xt/author/pod_syntax.t
 xt/author/README
 META.yml

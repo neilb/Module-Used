@@ -6,7 +6,7 @@ use utf8;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv('v1.1.0');
+use version; our $VERSION = qv('v1.2.0');
 
 use English qw<-no_match_vars>;
 use Readonly;
@@ -71,6 +71,19 @@ sub modules_used_in_document {
                 } # end if
             } # end if
         } # end foreach
+
+        my @moose_modules;
+        if ( $modules{Moose} ) {
+            @moose_modules =
+                _modules_loaded_by_moose_sugar($document, 'extends');
+            push
+                @moose_modules,
+                _modules_loaded_by_moose_sugar($document, 'with');
+        } elsif ( $modules{'Moose::Role'} ) {
+            @moose_modules =
+                _modules_loaded_by_moose_sugar($document, 'with');
+        } # end if
+        @modules{@moose_modules} = (1) x @moose_modules;
     } # end if
 
     return keys %modules;
@@ -122,18 +135,69 @@ sub _modules_loaded_by_base_or_parent {
         if ( $child->isa('PPI::Token::Quote') ) {
             push @modules, $child->string();
         } elsif ( $child->isa('PPI::Token::QuoteLike::Words') ) {
-            my $content = $child->content();
-
-            $content = substr $content, $QUOTE_WORDS_DELIMITER_OFFSET;
-            chop $content;
-            $content =~ s< \A \s+ ><>xms;
-            $content =~ s< \s+ \z ><>xms;
-            push @modules, split m< \s+ >xms, $content;
+            push @modules, _quotelike_words_literal($child);
         } # end if
     } # end foreach
 
     return @modules;
 } # end _modules_loaded_by_base_or_parent()
+
+
+# Delete this once next PPI version is released.
+sub _quotelike_words_literal {
+    my ($quotelike_words) = @_;
+
+    my $content = $quotelike_words->content();
+
+    $content = substr $content, $QUOTE_WORDS_DELIMITER_OFFSET;
+    chop $content;
+    return split q< >, $content;
+} # end _quotelike_words_literal()
+
+
+sub _modules_loaded_by_moose_sugar {
+    my ($document, $sugar) = @_;
+
+    my @modules;
+
+    my $statements = $document->find( _create_wanted_moose_sugar($sugar) );
+    return if not $statements;
+
+    foreach my $statement ( @{$statements} ) {
+        my @children = $statement->schildren();
+        shift @children; # 'with'
+
+        foreach my $child (@children) {
+            if ( $child->isa('PPI::Token::Quote') ) {
+                push @modules, $child->string();
+            } elsif ( $child->isa('PPI::Token::QuoteLike::Words') ) {
+                push @modules, _quotelike_words_literal($child);
+            } # end if
+        } # end foreach
+    } # end foreach
+
+    return @modules;
+} # end _modules_loaded_by_moose_sugar()
+
+
+sub _create_wanted_moose_sugar {
+    my ($sugar) = @_;
+
+    # Have to return 0 for false because undef tells PPI to stop searching.
+    return sub {
+        my (undef, $element) = @_;
+
+        # Fix this once the next PPI version is released.  Want only vanilla
+        # statements.
+        return 0 if ref $element ne 'PPI::Statement';
+
+        my $first_child = $element->schild(0);
+        return 0 if not $first_child;
+        return 0 if not $first_child->isa('PPI::Token::Word');
+
+        return $first_child->content() eq $sugar;
+    }; # end closure
+} # end _create_wanted_moose_sugar()
 
 
 1; # Magic true value required at end of module.
@@ -151,7 +215,7 @@ Module::Used - Find modules loaded by Perl code without running it.
 
 =head1 VERSION
 
-This document describes Module::Used version 1.1.0.
+This document describes Module::Used version 1.2.0.
 
 
 =head1 SYNOPSIS
@@ -173,7 +237,9 @@ This document describes Module::Used version 1.1.0.
 
 Modules are found statically based upon C<use> and C<require> statements.  If
 use of the L<base> or L<parent> is found, both that module and the referenced
-ones will be returned.
+ones will be returned.  If L<Moose> or L<Moose::Role> are found, this will
+look for C<extends> and C<with> sugar will be looked for; presently, this will
+miss modules listed in parentheses.
 
 Dynamically loaded modules will not be found.
 

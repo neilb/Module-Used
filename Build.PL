@@ -77,6 +77,17 @@ my $builder = $class->new(
         configure_requires  => {
             'Module::Build' => 0.2808,
         },
+        no_index    => {
+            file        => [
+                qw<
+                >
+            ],
+            directory   => [
+                qw<
+                    xt
+                >
+            ],
+        },
     },
 
     script_files        => [ glob('bin/*') ],

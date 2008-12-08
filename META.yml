@@ -1,6 +1,6 @@
 ---
 name: Module-Used
-version: v1.1.0
+version: v1.002000
 author:
   - 'Elliot Shank <perl@galumph.com>'
 abstract: Find modules loaded by Perl code without running it.
@@ -24,10 +24,14 @@ dynamic_config: 0
 provides:
   Module::Used:
     file: lib/Module/Used.pm
-    version: v1.1.0
-generated_by: Module::Build version 0.280801
+    version: v1.002000
+generated_by: Module::Build version 0.3
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+no_index:
+  directory:
+    - xt
+  file: []
 configure_requires:
   Module::Build: 0.2808
