@@ -10,6 +10,7 @@ use version; our $VERSION = qv('v1.2.0');
 
 use English qw<-no_match_vars>;
 use Readonly;
+use Module::Path qw< module_path >;
 
 use Exporter qw< import >;
 
@@ -18,6 +19,7 @@ our @EXPORT_OK =
         modules_used_in_files
         modules_used_in_string
         modules_used_in_document
+        modules_used_in_modules
     >;
 our %EXPORT_TAGS    = (
     all => [@EXPORT_OK],
@@ -40,6 +42,20 @@ sub modules_used_in_files {
     return keys %modules;
 } # end modules_used_in_files()
 
+sub modules_used_in_modules {
+    my @modules   = @_;
+    my @files     = ();
+    my $fullpath;
+
+    foreach my $module (@modules) {
+        $fullpath = module_path($module)
+                    or die qq<Could not find module "$module" in \@INC\n>;
+
+        push(@files, $fullpath);
+    }
+
+    return modules_used_in_files(@files);
+} # end modules_used_in_modules()
 
 sub modules_used_in_string {
     my ($string) = @_;
@@ -258,6 +274,12 @@ Return a list of modules used in the specified files.
 
 C<die>s if there is a problem reading a file.
 
+=item C< modules_used_in_modules( @module_names ) >
+
+Return a list of modules used in the specified modules.
+
+C<die>s if there any of the modules weren't found in C<@INC>.
+
 
 =item C< modules_used_in_string( $string ) >
 
@@ -306,7 +328,8 @@ None, currently.
 
 =head1 DEPENDENCIES
 
-L<PPI::Document>
+L<PPI::Document>,
+L<Module::Path>
 
 
 =head1 INCOMPATIBILITIES

@@ -63,6 +63,7 @@ my $builder = $class->new(
         'Exporter'          => 5.57,
         'File::Next'        => 1.02,
         'PPI::Document'     => 1.203,
+        'Module::Path'      => 0.01,
         'Readonly'          => 1.03,
         'strict'            => 0,
         'utf8'              => 0,

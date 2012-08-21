@@ -7,10 +7,14 @@ use warnings;
 
 use version; our $VERSION = qv('v1.1.0');
 
-use Module::Used qw< modules_used_in_string modules_used_in_files >;
+use Module::Used qw<
+                    modules_used_in_string
+                    modules_used_in_files
+                    modules_used_in_modules
+                   >;
 
 use Test::Deep qw< bag cmp_deeply >;
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 
 {
@@ -70,6 +74,12 @@ use Test::More tests => 21;
         [ modules_used_in_string( $code ) ],
         bag( qw< A base > ),
         $code,
+    );
+
+    cmp_deeply(
+        [ modules_used_in_modules( 'Config' ) ],
+        bag( qw< strict warnings vars > ),
+        'Config',
     );
 
 
